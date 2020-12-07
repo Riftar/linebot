@@ -99,9 +99,9 @@ public class Controller {
             DataCountry dataCountry = restCovid.getCountryData(query);
             String finalMsg = String.format("Total Kasus Covid19 di %s : \n %d confirmed \n %d recovered \n %d death",
                     query,
-                    dataCountry.getConfirmed(),
-                    dataCountry.getRecovered(),
-                    dataCountry.getDeath());
+                    dataCountry.getConfirmed().getValue(),
+                    dataCountry.getRecovered().getValue(),
+                    dataCountry.getDeath().getValue());
             replyText(token, finalMsg);
         } else {
             replyText(token, "Keyword anda kurang sesuai. \n Negara" + query + " tidak ditemukan.");
