@@ -4,7 +4,7 @@ public class DataCountry {
 
     private DetailDataCovid confirmed;
     private DetailDataCovid recovered;
-    private DetailDataCovid death;
+    private DetailDataCovid deaths;
 
     public DetailDataCovid getConfirmed() {
         return confirmed;
@@ -23,10 +23,10 @@ public class DataCountry {
     }
 
     public DetailDataCovid getDeath() {
-        return death;
+        return deaths;
     }
 
-    public void setDeath(DetailDataCovid death) {
-        this.death = death;
+    public void setDeath(DetailDataCovid deaths) {
+        this.deaths = deaths;
     }
 }
