@@ -1,8 +1,8 @@
 package com.riftar.linebot.model;
 
 public class DetailDataCovid {
-    private int value;
-    private String detailUrl;
+    private int value = 0;
+    private String detailUrl = "";
 
     public int getValue() {
         return value;
