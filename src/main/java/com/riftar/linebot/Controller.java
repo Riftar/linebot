@@ -101,7 +101,7 @@ public class Controller {
                     query,
                     dataCountry.getConfirmed().getValue(),
                     dataCountry.getRecovered().getValue(),
-                    dataCountry.getDeath().getValue());
+                    dataCountry.getDeaths().getValue());
             replyText(token, finalMsg);
         } else {
             replyText(token, "Keyword anda kurang sesuai. \n Negara" + query + " tidak ditemukan.");

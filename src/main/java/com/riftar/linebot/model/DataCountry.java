@@ -22,11 +22,11 @@ public class DataCountry {
         this.recovered = recovered;
     }
 
-    public DetailDataCovid getDeath() {
+    public DetailDataCovid getDeaths() {
         return deaths;
     }
 
-    public void setDeath(DetailDataCovid deaths) {
+    public void setDeaths(DetailDataCovid deaths) {
         this.deaths = deaths;
     }
 }
