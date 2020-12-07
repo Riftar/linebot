@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.ReplyMessage;
-import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
-import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import com.riftar.linebot.model.DataCountry;
+import com.riftar.linebot.model.EventsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -76,15 +75,14 @@ public class Controller {
         switch (msg[0]) {
             case "!location": {
                 if (msg.length > 1) {
-                    Constant.userLocation = textMessageContent.getText().toLowerCase().split(" ", 2)[1];
+                    Constant.userLocation = msg[1];
                 } else{
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !location + nama lokasi.");
                 }
             } break;
-            case "!search": {
+            case "!covid": {
                 if (msg.length > 1) {
-                    String query = (textMessageContent.getText().toLowerCase().split(" ", 2)[1]);
-                    replyText(token, "anda mencari restaurant "+query);
+                    handleCovidMessage(token, msg[1]);
                 } else{
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama restaurant.");
                 }
@@ -94,6 +92,22 @@ public class Controller {
             } break;
         }
     }
+
+    private void handleCovidMessage(String token, String query) {
+        RestCovid restCovid = new RestCovid();
+        if (restCovid.getCountryData(query) != null) {
+            DataCountry dataCountry = restCovid.getCountryData(query);
+            String finalMsg = String.format("Total Kasus Covid19 di %s : \n %d confirmed \n %d recovered \n %d death",
+                    query,
+                    dataCountry.getConfirmed(),
+                    dataCountry.getRecovered(),
+                    dataCountry.getDeath());
+            replyText(token, finalMsg);
+        } else {
+            replyText(token, "Keyword anda kurang sesuai. \n Negara" + query + " tidak ditemukan.");
+        }
+    }
+
 
     private void replyText(String replyToken, String messageToUser){
         TextMessage textMessage = new TextMessage(messageToUser);

@@ -1,4 +1,4 @@
-package com.riftar.linebot;
+package com.riftar.linebot.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
