@@ -4,8 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.event.Event;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.message.ImageMessageContent;
+import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.Message;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -43,13 +48,62 @@ public class Controller {
             EventsModel eventsModel = objectMapper.readValue(eventsPayload, EventsModel.class);
 
             eventsModel.getEvents().forEach((event)->{
-                // kode reply message disini
+                if (event instanceof MessageEvent) {
+                    MessageEvent messageEvent = (MessageEvent) event;
+                    String token = messageEvent.getReplyToken();
+                    try {
+                        Field field = MessageEvent.class.getField("message");
+                        if (field.getType() == TextMessageContent.class){
+                            TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
+                            handleTextMessage(token, textMessageContent);
+                        } else if (field.getType() == LocationMessageContent.class){
+                            LocationMessageContent loc = (LocationMessageContent) messageEvent.getMessage();
+                            replyText(token, "Lokasi anda "+ loc.getLatitude() +" "+loc.getLongitude());
+                        } else if (field.getType() == ImageMessageContent.class){
+                            ImageMessageContent img = (ImageMessageContent) messageEvent.getMessage();
+                            replyText(token, "gambar yg bagus");
+                        }
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    }
+                }
             });
 
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (IOException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    private void handleTextMessage(String token, TextMessageContent textMessageContent) {
+        String[] msg = textMessageContent.getText().toLowerCase().split(" ");
+        switch (msg[0]) {
+            case "!lokasi": {
+                replyText(token, textMessageContent.getText());
+            } break;
+            case "!search": {
+                String query = textMessageContent.getText().toLowerCase().split(" ",2)[1];
+                replyText(token, "anda mencari restaurant "+query);
+            } break;
+            case "!near": {
+                String query = textMessageContent.getText().toLowerCase().split(" ",2)[1];
+                replyText(token, "anda mencari restaurant dekat daerah"+query);
+            } break;
+        }
+    }
+
+    private void replyText(String replyToken, String messageToUser){
+        TextMessage textMessage = new TextMessage(messageToUser);
+        ReplyMessage replyMessage = new ReplyMessage(replyToken, textMessage);
+        reply(replyMessage);
+    }
+
+    private void reply(ReplyMessage replyMessage) {
+        try {
+            lineMessagingClient.replyMessage(replyMessage).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 }
