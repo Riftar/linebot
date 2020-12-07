@@ -51,20 +51,15 @@ public class Controller {
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
                     String token = messageEvent.getReplyToken();
-                    try {
-                        Field field = MessageEvent.class.getField("message");
-                        if (field.getType() == TextMessageContent.class){
-                            TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
-                            handleTextMessage(token, textMessageContent);
-                        } else if (field.getType() == LocationMessageContent.class){
-                            LocationMessageContent loc = (LocationMessageContent) messageEvent.getMessage();
-                            replyText(token, "Lokasi anda "+ loc.getLatitude() +" "+loc.getLongitude());
-                        } else if (field.getType() == ImageMessageContent.class){
-                            ImageMessageContent img = (ImageMessageContent) messageEvent.getMessage();
-                            replyText(token, "gambar yg bagus");
-                        }
-                    } catch (NoSuchFieldException e) {
-                        e.printStackTrace();
+                    if (messageEvent.getMessage().getClass() == TextMessageContent.class){
+                        TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
+                        handleTextMessage(token, textMessageContent);
+                    } else if (messageEvent.getMessage().getClass() == LocationMessageContent.class){
+                        LocationMessageContent loc = (LocationMessageContent) messageEvent.getMessage();
+                        replyText(token, "Lokasi anda "+ loc.getLatitude() +" "+loc.getLongitude());
+                    } else if (messageEvent.getMessage().getClass() == ImageMessageContent.class){
+                        ImageMessageContent img = (ImageMessageContent) messageEvent.getMessage();
+                        replyText(token, "gambar yg bagus");
                     }
                 }
             });
