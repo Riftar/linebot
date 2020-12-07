@@ -24,7 +24,9 @@ public class RestCovid {
             })).build();
 
             DataCountry result = restTemplate.getForObject(uri, DataCountry.class);
-            System.out.println(result);
+            System.out.println("confirm:" + result.getConfirmed().getValue());
+            System.out.println("recover:" + result.getRecovered().getValue());
+            System.out.println("death:" + result.getDeath().getValue());
             return result;
         } catch (Exception e){
             e.printStackTrace();
