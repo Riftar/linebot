@@ -74,16 +74,23 @@ public class Controller {
     private void handleTextMessage(String token, TextMessageContent textMessageContent) {
         String[] msg = textMessageContent.getText().toLowerCase().split(" ");
         switch (msg[0]) {
-            case "!lokasi": {
-                replyText(token, textMessageContent.getText());
+            case "!location": {
+                if (textMessageContent.getText().toLowerCase().split(" ", 2)[1] != null) {
+                    Constant.userLocation = textMessageContent.getText().toLowerCase().split(" ", 2)[1];
+                } else{
+                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !location + nama lokasi.");
+                }
             } break;
             case "!search": {
-                String query = textMessageContent.getText().toLowerCase().split(" ",2)[1];
-                replyText(token, "anda mencari restaurant "+query);
+                if (textMessageContent.getText().toLowerCase().split(" ", 2)[1] != null) {
+                    String query = (textMessageContent.getText().toLowerCase().split(" ", 2)[1]);
+                    replyText(token, "anda mencari restaurant "+query);
+                } else{
+                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama restaurant.");
+                }
             } break;
-            case "!near": {
-                String query = textMessageContent.getText().toLowerCase().split(" ",2)[1];
-                replyText(token, "anda mencari restaurant dekat daerah"+query);
+            case "!recomend": {
+                replyText(token, "Berikut adalah rekomendasi dari kami : \n 1. User loc "+ Constant.userLocation);
             } break;
         }
     }
