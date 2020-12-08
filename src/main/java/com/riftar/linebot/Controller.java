@@ -4,24 +4,31 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
 import com.linecorp.bot.model.ReplyMessage;
+import com.linecorp.bot.model.action.Action;
+import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.template.CarouselColumn;
+import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import com.riftar.linebot.Utils.NumberUtils;
-import com.riftar.linebot.model.DataCountry;
-import com.riftar.linebot.model.DataDaily;
 import com.riftar.linebot.model.EventsModel;
+import com.riftar.linebot.model.covid.DataCountry;
+import com.riftar.linebot.model.covid.DataDaily;
+import com.riftar.linebot.model.news.Article;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -85,16 +92,47 @@ public class Controller {
             } break;
             case "!covid": {
                 if (msg.length > 1) {
-                    handleCovidMessage(token, msg[1]);
+                    handleCountryMessage(token, msg[1]);
                 } else{
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama restaurant.");
                 }
             } break;
             case "!daily": {
                 handleDailyMessage(token);
-                replyText(token, "Berikut adalah rekomendasi dari kami : \n 1. User loc "+ Constant.userLocation);
+            } break;
+            case "!news": {
+                handleNewsMessage(token);
             } break;
         }
+    }
+
+    private void handleNewsMessage(String replyToken){
+        RestCovid req = new RestCovid();
+        List<Article> arr = req.getNews().getArticles();
+        List<CarouselColumn> carouselColumns = new ArrayList<CarouselColumn>();
+
+        for (int i=0; i<3; i++){
+            Article article = arr.get(i);
+
+            String myUri = article.getUrl();
+            String imageUri = article.getUrlToImage();
+
+            URIAction action = new URIAction("read more..", myUri);
+            List<Action> actionList = new ArrayList<Action>();
+            actionList.add(action);
+            CarouselColumn col = new CarouselColumn(
+                    imageUri,
+                    article.getTitle().substring(0,35), //max 40
+                    article.getDescription().substring(0,55), //max 60
+                    actionList
+            );
+
+            carouselColumns.add(col);
+        }
+        CarouselTemplate carousel = new CarouselTemplate(carouselColumns);
+        TemplateMessage message = new TemplateMessage("Berita terbaru seputar Covid-19", carousel);
+        ReplyMessage replyMessage = new ReplyMessage(replyToken, message);
+        reply(replyMessage);
     }
 
     private void handleDailyMessage(String token) {
@@ -109,7 +147,7 @@ public class Controller {
         replyText(token, finalMsg);
     }
 
-    private void handleCovidMessage(String token, String query) {
+    private void handleCountryMessage(String token, String query) {
         RestCovid restCovid = new RestCovid();
         if (restCovid.getCountryData(query) != null) {
             DataCountry dataCountry = restCovid.getCountryData(query);

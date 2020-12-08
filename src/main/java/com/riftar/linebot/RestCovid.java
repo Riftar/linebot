@@ -1,14 +1,18 @@
 package com.riftar.linebot;
 
-import com.riftar.linebot.model.DailyResponse;
-import com.riftar.linebot.model.DataCountry;
-import com.riftar.linebot.model.DataDaily;
+import com.riftar.linebot.model.covid.DailyResponse;
+import com.riftar.linebot.model.covid.DataCountry;
+import com.riftar.linebot.model.covid.DataDaily;
+import com.riftar.linebot.model.news.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 public class RestCovid {
+
+    private static final String NEWS_API = "e1b7aef10ed5493c849100922466a4e3";
+
     @Autowired
     private RestTemplate restTemplate;
 
@@ -52,6 +56,25 @@ public class RestCovid {
             } else{
                 return lastData;
             }
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @RequestMapping(value="/news", method= RequestMethod.GET)
+    public NewsResponse getNews()
+    {
+        try {
+            final String uri = "http://newsapi.org/v2/top-headlines?country=id&category=health&apiKey="+NEWS_API;
+
+            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+                return execution.execute(request, body);
+            })).build();
+
+            NewsResponse result = restTemplate.getForObject(uri, NewsResponse.class);
+            System.out.println(result);
+            return result;
         } catch (Exception e){
             e.printStackTrace();
             return null;

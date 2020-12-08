@@ -1,4 +1,4 @@
-package com.riftar.linebot.model;
+package com.riftar.linebot.model.covid;
 
 import java.util.List;
 
