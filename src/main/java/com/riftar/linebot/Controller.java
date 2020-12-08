@@ -3,6 +3,7 @@ package com.riftar.linebot;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.linecorp.bot.client.LineMessagingClient;
 import com.linecorp.bot.client.LineSignatureValidator;
+import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.URIAction;
@@ -15,6 +16,7 @@ import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import com.linecorp.bot.model.profile.UserProfileResponse;
 import com.riftar.linebot.Utils.NumberUtils;
 import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
@@ -24,14 +26,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @RestController
+@EnableScheduling
 public class Controller {
 
     @Autowired
@@ -41,6 +47,23 @@ public class Controller {
     @Autowired
     @Qualifier("lineSignatureValidator")
     private LineSignatureValidator lineSignatureValidator;
+
+    @Scheduled(cron = "0 * 16 * * *")
+    public void dailyUpdateCovid(){
+        try {
+            if (!Constant.userId.equals("")){
+                String date = NumberUtils.getDate();
+                System.out.println("update daily data "+date);
+//                String messageToUser = composeDailyData();
+//                TextMessage textMessage = new TextMessage(messageToUser);
+//                PushMessage pushMessage = new PushMessage(Constant.userId, textMessage);
+//                push(pushMessage);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error execute daily data");
+        }
+    }
 
     @RequestMapping(value="/webhook", method= RequestMethod.POST)
     public ResponseEntity<String> callback(
@@ -59,6 +82,7 @@ public class Controller {
             eventsModel.getEvents().forEach((event)->{
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
+                    Constant.userId = messageEvent.getMessage().getId();
                     String token = messageEvent.getReplyToken();
                     if (messageEvent.getMessage().getClass() == TextMessageContent.class){
                         TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
@@ -136,6 +160,11 @@ public class Controller {
     }
 
     private void handleDailyMessage(String token) {
+        String message = composeDailyData();
+        replyText(token, message);
+    }
+
+    private String composeDailyData() {
         RestCovid restCovid = new RestCovid();
         DataDaily dataDaily = restCovid.getDailyIndo();
         String finalMsg = String.format("Total Kasus Covid19 pada tanggal %s : \n %d confirmed \n %d recovered \n %d death",
@@ -143,8 +172,7 @@ public class Controller {
                 dataDaily.getJumlahKasusBaruperHari(),
                 dataDaily.getJumlahKasusSembuhperHari(),
                 dataDaily.getJumlahKasusMeninggalperHari());
-        System.out.println("printing "+finalMsg);
-        replyText(token, finalMsg);
+        return finalMsg;
     }
 
     private void handleCountryMessage(String token, String query) {
@@ -172,6 +200,14 @@ public class Controller {
     private void reply(ReplyMessage replyMessage) {
         try {
             lineMessagingClient.replyMessage(replyMessage).get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void push(PushMessage pushMessage){
+        try {
+            lineMessagingClient.pushMessage(pushMessage).get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
