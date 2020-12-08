@@ -1,4 +1,4 @@
-package com.riftar.linebot;
+package com.riftar.linebot.utils;
 
 public class Constant {
     public static String userLocation = "";

@@ -17,7 +17,10 @@ import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import com.linecorp.bot.model.profile.UserProfileResponse;
-import com.riftar.linebot.Utils.NumberUtils;
+import com.riftar.linebot.model.User;
+import com.riftar.linebot.repository.UserRepository;
+import com.riftar.linebot.utils.Constant;
+import com.riftar.linebot.utils.NumberUtils;
 import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
 import com.riftar.linebot.model.covid.DataDaily;
@@ -32,7 +35,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -48,10 +50,14 @@ public class Controller {
     @Qualifier("lineSignatureValidator")
     private LineSignatureValidator lineSignatureValidator;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Scheduled(cron = "0 * 17 * * *")
     public void dailyUpdateCovid(){
         try {
-            if (Constant.userId != ""){
+            List<User> users = (List<User>) userRepository.findAll();
+            if (!users.isEmpty()){
                 String date = NumberUtils.getDate();
                 System.out.println("update daily data "+date);
                 String messageToUser = composeDailyData();
@@ -64,6 +70,30 @@ public class Controller {
         } catch (Exception e){
             e.printStackTrace();
             System.out.println("Error execute daily data");
+        }
+    }
+
+    @RequestMapping(value="/user", method= RequestMethod.GET)
+    public ResponseEntity<String> callback() {
+        try {
+            List<User> users = (List<User>) userRepository.findAll();
+            if (!users.isEmpty()){
+                String date = NumberUtils.getDate();
+                System.out.println("update daily data "+ date);
+                String messageToUser = composeDailyData();
+                TextMessage textMessage = new TextMessage(messageToUser);
+                users.forEach( (user) -> {
+                    PushMessage pushMessage = new PushMessage(user.getUserId(), textMessage);
+                    push(pushMessage);
+                });
+            } else {
+                System.out.println("User ID is empty");
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Error execute daily data: "+e);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -84,7 +114,7 @@ public class Controller {
             eventsModel.getEvents().forEach((event)->{
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
-                    Constant.userId = messageEvent.getMessage().getId();
+                    saveUserId(messageEvent);
                     System.out.println("save user id "+Constant.userId);
                     String token = messageEvent.getReplyToken();
                     if (messageEvent.getMessage().getClass() == TextMessageContent.class){
@@ -106,6 +136,20 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    private void saveUserId(MessageEvent messageEvent) {
+        try {
+            String userId = messageEvent.getSource().getUserId();
+            UserProfileResponse profile = lineMessagingClient.getProfile(userId).get();
+            String userName = profile.getDisplayName();
+
+            User user = new User(userId, userName);
+            user = userRepository.save(user);
+
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+           }
 
     private void handleTextMessage(String token, TextMessageContent textMessageContent) {
         String[] msg = textMessageContent.getText().toLowerCase().split(" ", 2);

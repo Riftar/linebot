@@ -1,4 +1,4 @@
-package com.riftar.linebot.Utils;
+package com.riftar.linebot.utils;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;

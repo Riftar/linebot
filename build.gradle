@@ -20,6 +20,10 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+	//save to database
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.4.0'
+	testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+	runtimeOnly 'mysql:mysql-connector-java'
 }
 
 test {
