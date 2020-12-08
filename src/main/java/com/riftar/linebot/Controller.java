@@ -83,6 +83,7 @@ public class Controller {
                 if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
                     Constant.userId = messageEvent.getMessage().getId();
+                    System.out.println("save user id "+Constant.userId);
                     String token = messageEvent.getReplyToken();
                     if (messageEvent.getMessage().getClass() == TextMessageContent.class){
                         TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
