@@ -119,9 +119,9 @@ public class Controller {
                 if (event instanceof FollowEvent){
                     FollowEvent followEvent = (FollowEvent) event;
                     saveUserId(followEvent);
+                    System.out.println("save user id "+Constant.userId);
                 } else if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
-                    System.out.println("save user id "+Constant.userId);
                     String token = messageEvent.getReplyToken();
                     if (messageEvent.getMessage().getClass() == TextMessageContent.class){
                         TextMessageContent textMessageContent = (TextMessageContent) messageEvent.getMessage();
@@ -185,11 +185,11 @@ public class Controller {
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !location + nama lokasi.");
                 }
             } break;
-            case "!covid": {
+            case "!country": {
                 if (msg.length > 1) {
                     handleCountryMessage(token, msg[1]);
                 } else{
-                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama restaurant.");
+                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama negara.");
                 }
             } break;
             case "!daily": {
