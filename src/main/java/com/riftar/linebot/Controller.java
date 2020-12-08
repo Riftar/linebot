@@ -73,7 +73,7 @@ public class Controller {
         }
     }
 
-    @RequestMapping(value="/user", method= RequestMethod.GET)
+    @RequestMapping(value="/daily", method= RequestMethod.GET)
     public ResponseEntity<String> callback() {
         try {
             List<User> users = (List<User>) userRepository.findAll();
@@ -149,7 +149,7 @@ public class Controller {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-           }
+    }
 
     private void handleTextMessage(String token, TextMessageContent textMessageContent) {
         String[] msg = textMessageContent.getText().toLowerCase().split(" ", 2);

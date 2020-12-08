@@ -16,10 +16,7 @@ public class RestCovid {
     @Autowired
     private RestTemplate restTemplate;
 
-    @RequestMapping(value="/covid/{id}", method= RequestMethod.GET)
-    public DataCountry getCountryData(
-            @PathVariable("id") String countryId
-            )
+    public DataCountry getCountryData(String countryId)
     {
         try {
             final String uri = "https://covid19.mathdro.id/api/countries/"+countryId;
@@ -39,7 +36,6 @@ public class RestCovid {
         }
     }
 
-    @RequestMapping(value="/daily", method= RequestMethod.GET)
     public DataDaily getDailyIndo()
     {
         try {
@@ -62,7 +58,6 @@ public class RestCovid {
         }
     }
 
-    @RequestMapping(value="/news", method= RequestMethod.GET)
     public NewsResponse getNews()
     {
         try {
