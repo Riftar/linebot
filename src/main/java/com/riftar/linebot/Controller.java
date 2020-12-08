@@ -10,7 +10,9 @@ import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
 import com.linecorp.bot.model.message.TextMessage;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
+import com.riftar.linebot.Utils.NumberUtils;
 import com.riftar.linebot.model.DataCountry;
+import com.riftar.linebot.model.DataDaily;
 import com.riftar.linebot.model.EventsModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
@@ -87,10 +90,23 @@ public class Controller {
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama restaurant.");
                 }
             } break;
-            case "!recomend": {
+            case "!daily": {
+                handleDailyMessage(token);
                 replyText(token, "Berikut adalah rekomendasi dari kami : \n 1. User loc "+ Constant.userLocation);
             } break;
         }
+    }
+
+    private void handleDailyMessage(String token) {
+        RestCovid restCovid = new RestCovid();
+        DataDaily dataDaily = restCovid.getDailyIndo();
+        String finalMsg = String.format("Total Kasus Covid19 pada tanggal %s : \n %d confirmed \n %d recovered \n %d death",
+                NumberUtils.formatDate(dataDaily.getTanggal()),
+                dataDaily.getJumlahKasusBaruperHari(),
+                dataDaily.getJumlahKasusSembuhperHari(),
+                dataDaily.getJumlahKasusMeninggalperHari());
+        System.out.println("printing "+finalMsg);
+        replyText(token, finalMsg);
     }
 
     private void handleCovidMessage(String token, String query) {
