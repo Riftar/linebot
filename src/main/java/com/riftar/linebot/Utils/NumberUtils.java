@@ -1,11 +1,13 @@
 package com.riftar.linebot.Utils;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 public class NumberUtils {
 
@@ -20,5 +22,11 @@ public class NumberUtils {
         Date now = new Date();
         String strDate = sdf.format(now);
         return strDate;
+    }
+
+    public static String formatNumber(Integer number){
+        String clean = NumberFormat.getNumberInstance(Locale.US).format(number);
+        String result = clean.replace(",", ".");
+        return result;
     }
 }

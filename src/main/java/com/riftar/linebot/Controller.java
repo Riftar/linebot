@@ -48,7 +48,7 @@ public class Controller {
     @Qualifier("lineSignatureValidator")
     private LineSignatureValidator lineSignatureValidator;
 
-    @Scheduled(cron = "0 * 16 * * *")
+    @Scheduled(cron = "0 * 17 * * *")
     public void dailyUpdateCovid(){
         try {
             if (Constant.userId != ""){
@@ -170,11 +170,15 @@ public class Controller {
     private String composeDailyData() {
         RestCovid restCovid = new RestCovid();
         DataDaily dataDaily = restCovid.getDailyIndo();
-        String finalMsg = String.format("Total Kasus Covid19 pada tanggal %s : \n %d confirmed \n %d recovered \n %d death",
-                NumberUtils.formatDate(dataDaily.getTanggal()),
-                dataDaily.getJumlahKasusBaruperHari(),
-                dataDaily.getJumlahKasusSembuhperHari(),
-                dataDaily.getJumlahKasusMeninggalperHari());
+        String date = NumberUtils.formatDate(dataDaily.getTanggal());
+        String confirmed = NumberUtils.formatNumber(dataDaily.getJumlahKasusBaruperHari());
+        String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
+        String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
+        String finalMsg = String.format("Total Kasus Covid19 pada tanggal %s : \n %s confirmed \n %s recovered \n %s death",
+                date,
+                confirmed,
+                recovered,
+                death);
         return finalMsg;
     }
 
@@ -182,14 +186,17 @@ public class Controller {
         RestCovid restCovid = new RestCovid();
         if (restCovid.getCountryData(query) != null) {
             DataCountry dataCountry = restCovid.getCountryData(query);
-            String finalMsg = String.format("Total Kasus Covid19 di %s : \n %d confirmed \n %d recovered \n %d death",
+            String confirmed = NumberUtils.formatNumber(dataCountry.getConfirmed().getValue());
+            String recovered = NumberUtils.formatNumber(dataCountry.getRecovered().getValue());
+            String death = NumberUtils.formatNumber(dataCountry.getDeaths().getValue());
+            String finalMsg = String.format("Total Kasus Covid19 di %s : \n %s confirmed \n %s recovered \n %s death",
                     query,
-                    dataCountry.getConfirmed().getValue(),
-                    dataCountry.getRecovered().getValue(),
-                    dataCountry.getDeaths().getValue());
+                    confirmed,
+                    recovered,
+                    death);
             replyText(token, finalMsg);
         } else {
-            replyText(token, "Keyword anda kurang sesuai. \n Negara" + query + " tidak ditemukan.");
+            replyText(token, "Keyword anda kurang sesuai. \n Negara " + query + " tidak ditemukan.");
         }
     }
 
