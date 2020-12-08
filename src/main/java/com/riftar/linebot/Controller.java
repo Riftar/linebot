@@ -7,7 +7,10 @@ import com.linecorp.bot.model.PushMessage;
 import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.URIAction;
+import com.linecorp.bot.model.event.FollowEvent;
+import com.linecorp.bot.model.event.JoinEvent;
 import com.linecorp.bot.model.event.MessageEvent;
+import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
@@ -25,6 +28,7 @@ import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
 import com.riftar.linebot.model.covid.DataDaily;
 import com.riftar.linebot.model.news.Article;
+import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -112,9 +116,11 @@ public class Controller {
             EventsModel eventsModel = objectMapper.readValue(eventsPayload, EventsModel.class);
 
             eventsModel.getEvents().forEach((event)->{
-                if (event instanceof MessageEvent) {
+                if (event instanceof FollowEvent){
+                    FollowEvent followEvent = (FollowEvent) event;
+                    saveUserId(followEvent);
+                } else if (event instanceof MessageEvent) {
                     MessageEvent messageEvent = (MessageEvent) event;
-                    saveUserId(messageEvent);
                     System.out.println("save user id "+Constant.userId);
                     String token = messageEvent.getReplyToken();
                     if (messageEvent.getMessage().getClass() == TextMessageContent.class){
@@ -127,6 +133,9 @@ public class Controller {
                         ImageMessageContent img = (ImageMessageContent) messageEvent.getMessage();
                         replyText(token, "gambar yg bagus");
                     }
+                } else if (event instanceof UnfollowEvent){
+                    UnfollowEvent unfollowEvent = (UnfollowEvent) event;
+                    deleteUserId(unfollowEvent);
                 }
             });
 
@@ -137,9 +146,24 @@ public class Controller {
         }
     }
 
-    private void saveUserId(MessageEvent messageEvent) {
+    private void deleteUserId(UnfollowEvent event) {
         try {
-            String userId = messageEvent.getSource().getUserId();
+            String userId = event.getSource().getUserId();
+            List<User> users = (List<User>) userRepository.findAll();
+            users.forEach((user -> {
+                if (user.getUserId() == userId){
+                    userRepository.delete(user);
+                    System.out.println("User has been deleted");
+                }
+            }));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveUserId(FollowEvent event) {
+        try {
+            String userId = event.getSource().getUserId();
             UserProfileResponse profile = lineMessagingClient.getProfile(userId).get();
             String userName = profile.getDisplayName();
 
