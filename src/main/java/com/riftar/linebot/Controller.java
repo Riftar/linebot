@@ -51,13 +51,15 @@ public class Controller {
     @Scheduled(cron = "0 * 16 * * *")
     public void dailyUpdateCovid(){
         try {
-            if (!Constant.userId.equals("")){
+            if (Constant.userId != ""){
                 String date = NumberUtils.getDate();
                 System.out.println("update daily data "+date);
-//                String messageToUser = composeDailyData();
-//                TextMessage textMessage = new TextMessage(messageToUser);
-//                PushMessage pushMessage = new PushMessage(Constant.userId, textMessage);
-//                push(pushMessage);
+                String messageToUser = composeDailyData();
+                TextMessage textMessage = new TextMessage(messageToUser);
+                PushMessage pushMessage = new PushMessage(Constant.userId, textMessage);
+                push(pushMessage);
+            } else {
+                System.out.println("User ID is empty");
             }
         } catch (Exception e){
             e.printStackTrace();
