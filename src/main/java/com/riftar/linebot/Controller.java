@@ -14,8 +14,10 @@ import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.ImageMessageContent;
 import com.linecorp.bot.model.event.message.LocationMessageContent;
 import com.linecorp.bot.model.event.message.TextMessageContent;
+import com.linecorp.bot.model.message.FlexMessage;
 import com.linecorp.bot.model.message.TemplateMessage;
 import com.linecorp.bot.model.message.TextMessage;
+import com.linecorp.bot.model.message.flex.container.FlexContainer;
 import com.linecorp.bot.model.message.template.CarouselColumn;
 import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
@@ -28,6 +30,9 @@ import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
 import com.riftar.linebot.model.covid.DataDaily;
 import com.riftar.linebot.model.news.Article;
+import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
+import org.apache.commons.io.IOUtils;
 import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -287,6 +292,27 @@ public class Controller {
         try {
             lineMessagingClient.pushMessage(pushMessage).get();
         } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void replyFlexMessage(String replyToken) {
+        try {
+            ClassLoader classLoader = getClass().getClassLoader();
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("flex_daily_covid.json"));
+
+
+            ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
+            FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
+
+            JSONObject flex = objectMapper.readValue(flexTemplate, JSONObject.class);
+            flex.put("text", "new Title");
+
+            System.out.println("FLEX JSON "+flex);
+
+            //ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
+            //reply(replyMessage);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
