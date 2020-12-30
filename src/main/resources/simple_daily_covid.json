@@ -13,7 +13,7 @@
       },
       {
         "type": "text",
-        "text": "@negara",
+        "text": "Indonesia",
         "weight": "bold",
         "size": "xxl",
         "margin": "md"
@@ -28,74 +28,6 @@
       {
         "type": "separator",
         "margin": "xxl"
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "margin": "xxl",
-        "spacing": "sm",
-        "contents": [
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Kasus Positif",
-                "size": "sm",
-                "color": "#ffffff",
-                "flex": 0
-              },
-              {
-                "type": "text",
-                "text": "@positif",
-                "size": "sm",
-                "color": "#ffffff",
-                "align": "end"
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Sembuh",
-                "size": "sm",
-                "color": "#ffffff",
-                "flex": 0
-              },
-              {
-                "type": "text",
-                "text": "@sembuh",
-                "size": "sm",
-                "color": "#ffffff",
-                "align": "end"
-              }
-            ]
-          },
-          {
-            "type": "box",
-            "layout": "horizontal",
-            "contents": [
-              {
-                "type": "text",
-                "text": "Meninggal",
-                "size": "sm",
-                "color": "#ffffff",
-                "flex": 0
-              },
-              {
-                "type": "text",
-                "text": "@meninggal",
-                "size": "sm",
-                "color": "#ffffff",
-                "align": "end"
-              }
-            ]
-          }
-        ]
       },
       {
         "type": "separator",
@@ -114,6 +46,75 @@
             "align": "end"
           }
         ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Kasus Positif",
+            "size": "sm",
+            "color": "#ffffff",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "1234",
+            "size": "sm",
+            "color": "#ffffff",
+            "align": "end"
+          }
+        ],
+        "backgroundColor": "#DF3030",
+        "cornerRadius": "md",
+        "paddingAll": "md"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Sembuh",
+            "size": "sm",
+            "color": "#ffffff",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "1234",
+            "size": "sm",
+            "color": "#ffffff",
+            "align": "end"
+          }
+        ],
+        "backgroundColor": "#28df99",
+        "cornerRadius": "md",
+        "paddingAll": "md"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "Meninggal",
+            "size": "sm",
+            "color": "#ffffff",
+            "flex": 0
+          },
+          {
+            "type": "text",
+            "text": "1234",
+            "size": "sm",
+            "color": "#ffffff",
+            "align": "end"
+          }
+        ],
+        "backgroundColor": "#393e46",
+        "cornerRadius": "md",
+        "paddingAll": "md"
       }
     ]
   },
