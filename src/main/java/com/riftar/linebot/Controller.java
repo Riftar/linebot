@@ -329,7 +329,8 @@ public class Controller {
             try {
                 DataCountry dataCountry = restCovid.getCountryData(query);
                 String countryName = searchCountryName(query);
-                if (countryName.isEmpty()) {
+                if (countryName.equals("")) {
+                    System.out.println("query gak ketemu");
                     replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
                 } else {
                     String date = NumberUtils.formatDateCountry(dataCountry.getLastUpdate());
