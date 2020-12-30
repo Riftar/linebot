@@ -257,8 +257,8 @@ public class Controller {
         RestCovid restCovid = new RestCovid();
         Countries countries = restCovid.getCountryName();
         for (int i = 0; i<countries.getCountries().size()-1 ; i++){
-            if (countries.getCountries().get(i).getIso2() == query ||
-                    countries.getCountries().get(i).getIso3() == query){
+            if (countries.getCountries().get(i).getIso2().equalsIgnoreCase(query) ||
+                    countries.getCountries().get(i).getIso3().equalsIgnoreCase(query)){
                 return countries.getCountries().get(i).getName();
             }
         }
