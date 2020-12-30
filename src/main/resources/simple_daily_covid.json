@@ -26,10 +26,6 @@
         "wrap": true
       },
       {
-        "type": "separator",
-        "margin": "xxl"
-      },
-      {
         "type": "box",
         "layout": "vertical",
         "margin": "xxl",
@@ -105,10 +101,6 @@
             "paddingAll": "md"
           }
         ]
-      },
-      {
-        "type": "separator",
-        "margin": "xxl"
       },
       {
         "type": "box",
