@@ -58,7 +58,6 @@ public class RestCovid {
             })).build();
 
             DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
-            System.out.println("Daily result: " + data);
             DataDaily lastData = data.getData().get(data.getData().size() - 1);
             if (lastData.getJumlahKasusBaruperHari() == null){
                 return data.getData().get(data.getData().size() - 2);
