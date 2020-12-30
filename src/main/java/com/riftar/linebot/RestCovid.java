@@ -1,8 +1,6 @@
 package com.riftar.linebot;
 
-import com.riftar.linebot.model.covid.DailyResponse;
-import com.riftar.linebot.model.covid.DataCountry;
-import com.riftar.linebot.model.covid.DataDaily;
+import com.riftar.linebot.model.covid.*;
 import com.riftar.linebot.model.news.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -26,9 +24,23 @@ public class RestCovid {
             })).build();
 
             DataCountry result = restTemplate.getForObject(uri, DataCountry.class);
-            System.out.println("confirm:" + result.getConfirmed().getValue());
-            System.out.println("recover:" + result.getRecovered().getValue());
-            System.out.println("death:" + result.getDeaths().getValue());
+            return result;
+        } catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Countries getCountryName()
+    {
+        try {
+            final String uri = "https://covid19.mathdro.id/api/countries/";
+
+            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+                return execution.execute(request, body);
+            })).build();
+
+            Countries result = restTemplate.getForObject(uri, Countries.class);
             return result;
         } catch (Exception e){
             e.printStackTrace();

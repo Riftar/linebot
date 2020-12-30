@@ -8,7 +8,6 @@ import com.linecorp.bot.model.ReplyMessage;
 import com.linecorp.bot.model.action.Action;
 import com.linecorp.bot.model.action.URIAction;
 import com.linecorp.bot.model.event.FollowEvent;
-import com.linecorp.bot.model.event.JoinEvent;
 import com.linecorp.bot.model.event.MessageEvent;
 import com.linecorp.bot.model.event.UnfollowEvent;
 import com.linecorp.bot.model.event.message.ImageMessageContent;
@@ -23,6 +22,7 @@ import com.linecorp.bot.model.message.template.CarouselTemplate;
 import com.linecorp.bot.model.objectmapper.ModelObjectMapper;
 import com.linecorp.bot.model.profile.UserProfileResponse;
 import com.riftar.linebot.model.User;
+import com.riftar.linebot.model.covid.Countries;
 import com.riftar.linebot.repository.UserRepository;
 import com.riftar.linebot.utils.Constant;
 import com.riftar.linebot.utils.NumberUtils;
@@ -30,10 +30,7 @@ import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
 import com.riftar.linebot.model.covid.DataDaily;
 import com.riftar.linebot.model.news.Article;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
 import org.apache.commons.io.IOUtils;
-import org.hibernate.mapping.Join;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -192,14 +189,14 @@ public class Controller {
             } break;
             case "!country": {
                 if (msg.length > 1) {
-                    handleCountryMessage(token, msg[1]);
+                    composeCountryMessage(token, msg[1]);
                 } else{
                     replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama negara.");
                 }
             } break;
             case "!daily": {
 //                handleDailyMessage(token);
-                replyFlexMessage(token);
+                composeDailyFlexMessage(token);
             } break;
             case "!news": {
                 handleNewsMessage(token);
@@ -256,22 +253,16 @@ public class Controller {
         return finalMsg;
     }
 
-    private void handleCountryMessage(String token, String query) {
+    private String searchCountryName(String query) {
         RestCovid restCovid = new RestCovid();
-        if (restCovid.getCountryData(query) != null) {
-            DataCountry dataCountry = restCovid.getCountryData(query);
-            String confirmed = NumberUtils.formatNumber(dataCountry.getConfirmed().getValue());
-            String recovered = NumberUtils.formatNumber(dataCountry.getRecovered().getValue());
-            String death = NumberUtils.formatNumber(dataCountry.getDeaths().getValue());
-            String finalMsg = String.format("Total Kasus Covid19 di %s : \n %s confirmed \n %s recovered \n %s death",
-                    query,
-                    confirmed,
-                    recovered,
-                    death);
-            replyText(token, finalMsg);
-        } else {
-            replyText(token, "Keyword anda kurang sesuai. \n Negara " + query + " tidak ditemukan.");
+        Countries countries = restCovid.getCountryName();
+        for (int i = 0; i<countries.getCountries().size()-1 ; i++){
+            if (countries.getCountries().get(i).getIso2() == query ||
+                    countries.getCountries().get(i).getIso3() == query){
+                return countries.getCountries().get(i).getName();
+            }
         }
+        return "";
     }
 
 
@@ -297,25 +288,70 @@ public class Controller {
         }
     }
 
-    private void replyFlexMessage(String replyToken) {
+    private void replyFlexMessage(String replyToken, String flexTemplate) {
         try {
-            ClassLoader classLoader = getClass().getClassLoader();
-            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
-
-//            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
-//            flexTemplate = flexTemplate.replace("@positif", "angka positif");
-//            flexTemplate = flexTemplate.replace("@sembuh", "angka sembuh");
-//            flexTemplate = flexTemplate.replace("@meninggal", "angka meinggal");
-
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
-//
-//            JSONObject flex = objectMapper.readValue(flexTemplate, JSONObject.class);
-//            System.out.println("FLEX JSON "+flex);
             ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
             reply(replyMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void composeDailyFlexMessage(String replyToken) {
+       try{
+           RestCovid restCovid = new RestCovid();
+           DataDaily dataDaily = restCovid.getDailyIndo();
+           String date = NumberUtils.formatDate(dataDaily.getTanggal());
+           String confirmed = NumberUtils.formatNumber(dataDaily.getJumlahKasusBaruperHari());
+           String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
+           String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
+
+           ClassLoader classLoader = getClass().getClassLoader();
+           String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
+
+           flexTemplate = flexTemplate.replace("@title", "Daily Update");
+           flexTemplate = flexTemplate.replace("@negara", "Indonesia");
+           flexTemplate = flexTemplate.replace("@tanggal", date);
+           flexTemplate = flexTemplate.replace("@positif", confirmed);
+           flexTemplate = flexTemplate.replace("@sembuh", recovered);
+           flexTemplate = flexTemplate.replace("@meninggal", death);
+           replyFlexMessage(replyToken, flexTemplate);
+       } catch (IOException e){
+           throw new RuntimeException(e);
+       }
+    }
+
+    private void composeCountryMessage(String token, String query) {
+        RestCovid restCovid = new RestCovid();
+        if (restCovid.getCountryData(query) != null) {
+            try {
+                DataCountry dataCountry = restCovid.getCountryData(query);
+                String countryName = searchCountryName(query);
+                if (countryName.isEmpty()) {
+                    replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
+                } else {
+                    String date = NumberUtils.formatDateCountry(dataCountry.getLastUpdate());
+                    String confirmed = NumberUtils.formatNumber(dataCountry.getConfirmed().getValue());
+                    String recovered = NumberUtils.formatNumber(dataCountry.getRecovered().getValue());
+                    String death = NumberUtils.formatNumber(dataCountry.getDeaths().getValue());
+                    ClassLoader classLoader = getClass().getClassLoader();
+                    String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
+
+                    flexTemplate = flexTemplate.replace("@title", "Total Cases");
+                    flexTemplate = flexTemplate.replace("@negara", countryName);
+                    flexTemplate = flexTemplate.replace("@tanggal", date);
+                    flexTemplate = flexTemplate.replace("@positif", confirmed);
+                    flexTemplate = flexTemplate.replace("@sembuh", recovered);
+                    flexTemplate = flexTemplate.replace("@meninggal", death);
+                    replyFlexMessage(token, flexTemplate);
+                }
+            } catch (IOException e){
+                throw new RuntimeException(e);
+            }
+        } else {
+            replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
         }
     }
 }

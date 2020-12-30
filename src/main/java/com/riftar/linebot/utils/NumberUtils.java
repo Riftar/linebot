@@ -17,6 +17,11 @@ public class NumberUtils {
         return local.format(DateTimeFormatter.ofPattern("dd MMM yyyy"));
     }
 
+    public static String formatDateCountry(String date){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyy");
+        return sdf.format(date);
+    }
+
     public static String getDate(){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         Date now = new Date();

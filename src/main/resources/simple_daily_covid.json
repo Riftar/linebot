@@ -6,27 +6,95 @@
     "contents": [
       {
         "type": "text",
-        "text": "Daily Report",
+        "text": "@title",
         "weight": "bold",
-        "color": "#ffffff",
+        "color": "#DF3030",
         "size": "sm"
       },
       {
         "type": "text",
-        "text": "Indonesia",
+        "text": "@negara",
         "weight": "bold",
         "size": "xxl",
         "margin": "md"
       },
       {
         "type": "text",
-        "text": "29 Desember 2020",
+        "text": "@tanggal",
         "size": "xs",
         "color": "#aaaaaa",
         "wrap": true
       },
       {
         "type": "separator",
+        "margin": "xxl"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Kasus Positif",
+                "size": "sm",
+                "color": "#DF3030",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@positif",
+                "size": "sm",
+                "color": "#DF3030",
+                "align": "end"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Sembuh",
+                "size": "sm",
+                "color": "#28df99",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@sembuh",
+                "size": "sm",
+                "color": "#28df99",
+                "align": "end"
+              }
+            ]
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Meninggal",
+                "size": "sm",
+                "color": "#393e46",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@meninggal",
+                "size": "sm",
+                "color": "#393e46",
+                "align": "end"
+              }
+            ]
+          }
+        ],
         "margin": "xxl"
       },
       {
@@ -46,75 +114,6 @@
             "align": "end"
           }
         ]
-      },
-      {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Kasus Positif",
-            "size": "sm",
-            "color": "#000000",
-            "flex": 0
-          },
-          {
-            "type": "text",
-            "text": "1234",
-            "size": "sm",
-            "color": "#000000",
-            "align": "end"
-          }
-        ],
-        "backgroundColor": "#DF3030",
-        "cornerRadius": "md",
-        "paddingAll": "md"
-      },
-      {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Sembuh",
-            "size": "sm",
-            "color": "#000000",
-            "flex": 0
-          },
-          {
-            "type": "text",
-            "text": "1234",
-            "size": "sm",
-            "color": "#000000",
-            "align": "end"
-          }
-        ],
-        "backgroundColor": "#28df99",
-        "cornerRadius": "md",
-        "paddingAll": "md"
-      },
-      {
-        "type": "box",
-        "layout": "horizontal",
-        "contents": [
-          {
-            "type": "text",
-            "text": "Meninggal",
-            "size": "sm",
-            "color": "#000000",
-            "flex": 0
-          },
-          {
-            "type": "text",
-            "text": "1234",
-            "size": "sm",
-            "color": "#000000",
-            "align": "end"
-          }
-        ],
-        "backgroundColor": "#393e46",
-        "cornerRadius": "md",
-        "paddingAll": "md"
       }
     ]
   },
