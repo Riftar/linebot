@@ -8,7 +8,7 @@
         "type": "text",
         "text": "Daily Report",
         "weight": "bold",
-        "color": "#DF3030",
+        "color": "#ffffff",
         "size": "sm"
       },
       {
@@ -55,14 +55,14 @@
             "type": "text",
             "text": "Kasus Positif",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "flex": 0
           },
           {
             "type": "text",
             "text": "1234",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "align": "end"
           }
         ],
@@ -78,14 +78,14 @@
             "type": "text",
             "text": "Sembuh",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "flex": 0
           },
           {
             "type": "text",
             "text": "1234",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "align": "end"
           }
         ],
@@ -101,14 +101,14 @@
             "type": "text",
             "text": "Meninggal",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "flex": 0
           },
           {
             "type": "text",
             "text": "1234",
             "size": "sm",
-            "color": "#ffffff",
+            "color": "#000000",
             "align": "end"
           }
         ],
