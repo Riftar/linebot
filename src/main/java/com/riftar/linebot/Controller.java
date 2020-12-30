@@ -105,8 +105,8 @@ public class Controller {
     @RequestMapping(value="/countries", method= RequestMethod.GET)
     public ResponseEntity<String> tes() {
         RestCovid restCovid = new RestCovid();
-        DataCountry result = restCovid.getCountryData("id");
-        System.out.println(result.getConfirmed());
+        DataDaily result = restCovid.getDailyIndo();
+        System.out.println(result.getTanggal());
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @RequestMapping(value="/webhook", method= RequestMethod.POST)
@@ -201,8 +201,8 @@ public class Controller {
                 }
             } break;
             case "!daily": {
-                handleDailyMessage(token);
-//                composeDailyFlexMessage(token);
+//                handleDailyMessage(token);
+                composeDailyFlexMessage(token);
             } break;
             case "!news": {
                 handleNewsMessage(token);
@@ -334,11 +334,11 @@ public class Controller {
 //        if (restCovid.getCountryData(query) != null) {
             try {
                 DataCountry dataCountry = restCovid.getCountryData(query);
-                String countryName = searchCountryName(query);
-                if (countryName.equals("")) {
-                    System.out.println("query gak ketemu");
-                    replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
-                } else {
+               // String countryName = searchCountryName(query);
+                //if (countryName.equals("")) {
+                  //  System.out.println("query gak ketemu");
+                  //  replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
+               // } else {
                     String date = NumberUtils.formatDateCountry(dataCountry.getLastUpdate());
                     String confirmed = NumberUtils.formatNumber(dataCountry.getConfirmed().getValue());
                     String recovered = NumberUtils.formatNumber(dataCountry.getRecovered().getValue());
@@ -347,13 +347,13 @@ public class Controller {
                     String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
 
                     flexTemplate = flexTemplate.replace("@title", "Total Cases");
-                    flexTemplate = flexTemplate.replace("@negara", countryName);
+//                    flexTemplate = flexTemplate.replace("@negara", countryName);
                     flexTemplate = flexTemplate.replace("@tanggal", date);
                     flexTemplate = flexTemplate.replace("@positif", confirmed);
                     flexTemplate = flexTemplate.replace("@sembuh", recovered);
                     flexTemplate = flexTemplate.replace("@meninggal", death);
                     replyFlexMessage(token, flexTemplate);
-                }
+//                }
             } catch (IOException e){
                 throw new RuntimeException(e);
             }
