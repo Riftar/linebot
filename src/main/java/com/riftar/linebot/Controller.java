@@ -105,8 +105,8 @@ public class Controller {
     @RequestMapping(value="/countries", method= RequestMethod.GET)
     public ResponseEntity<String> tes() {
         RestCovid restCovid = new RestCovid();
-        Countries result = restCovid.getCountryName();
-        System.out.println(result.getCountries());
+        DataDaily result = restCovid.getDailyIndo();
+        System.out.println(result.getTanggal());
         return new ResponseEntity<>(HttpStatus.OK);
     }
     @RequestMapping(value="/webhook", method= RequestMethod.POST)
