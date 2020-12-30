@@ -302,10 +302,10 @@ public class Controller {
             ClassLoader classLoader = getClass().getClassLoader();
             String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
 
-            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
-            flexTemplate = flexTemplate.replace("@positif", "angka positif");
-            flexTemplate = flexTemplate.replace("@sembuh", "angka sembuh");
-            flexTemplate = flexTemplate.replace("@meninggal", "angka meinggal");
+//            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
+//            flexTemplate = flexTemplate.replace("@positif", "angka positif");
+//            flexTemplate = flexTemplate.replace("@sembuh", "angka sembuh");
+//            flexTemplate = flexTemplate.replace("@meninggal", "angka meinggal");
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
