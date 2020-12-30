@@ -191,12 +191,12 @@ public class Controller {
                 if (msg.length > 1) {
                     composeCountryMessage(token, msg[1]);
                 } else{
-                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !search + nama negara.");
+                    replyText(token, "Keyword anda kurang sesuai. \n Gunakan !country + nama negara.");
                 }
             } break;
             case "!daily": {
-//                handleDailyMessage(token);
-                composeDailyFlexMessage(token);
+                handleDailyMessage(token);
+//                composeDailyFlexMessage(token);
             } break;
             case "!news": {
                 handleNewsMessage(token);
@@ -325,7 +325,7 @@ public class Controller {
 
     private void composeCountryMessage(String token, String query) {
         RestCovid restCovid = new RestCovid();
-        if (restCovid.getCountryData(query) != null) {
+//        if (restCovid.getCountryData(query) != null) {
             try {
                 DataCountry dataCountry = restCovid.getCountryData(query);
                 String countryName = searchCountryName(query);
@@ -351,8 +351,8 @@ public class Controller {
             } catch (IOException e){
                 throw new RuntimeException(e);
             }
-        } else {
-            replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
-        }
+//        } else {
+//            replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
+//        }
     }
 }
