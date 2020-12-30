@@ -1,0 +1,134 @@
+{
+  "type": "bubble",
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "Daily Report",
+        "weight": "bold",
+        "color": "#DF3030",
+        "size": "sm"
+      },
+      {
+        "type": "text",
+        "text": "@negara",
+        "weight": "bold",
+        "size": "xxl",
+        "margin": "md"
+      },
+      {
+        "type": "text",
+        "text": "29 Desember 2020",
+        "size": "xs",
+        "color": "#aaaaaa",
+        "wrap": true
+      },
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "margin": "xxl",
+        "spacing": "sm",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Kasus Positif",
+                "size": "sm",
+                "color": "#ffffff",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@positif",
+                "size": "sm",
+                "color": "#ffffff",
+                "align": "end"
+              }
+            ],
+            "backgroundColor": "#DF3030",
+            "cornerRadius": "md",
+            "paddingAll": "md"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Sembuh",
+                "size": "sm",
+                "color": "#ffffff",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@sembuh",
+                "size": "sm",
+                "color": "#ffffff",
+                "align": "end"
+              }
+            ],
+            "backgroundColor": "#28df99",
+            "cornerRadius": "md",
+            "paddingAll": "md"
+          },
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "contents": [
+              {
+                "type": "text",
+                "text": "Meninggal",
+                "size": "sm",
+                "color": "#ffffff",
+                "flex": 0
+              },
+              {
+                "type": "text",
+                "text": "@meninggal",
+                "size": "sm",
+                "color": "#ffffff",
+                "align": "end"
+              }
+            ],
+            "backgroundColor": "#393e46",
+            "cornerRadius": "md",
+            "paddingAll": "md"
+          }
+        ]
+      },
+      {
+        "type": "separator",
+        "margin": "xxl"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "data by mathdroid",
+            "color": "#aaaaaa",
+            "size": "xs",
+            "align": "end"
+          }
+        ]
+      }
+    ]
+  },
+  "styles": {
+    "footer": {
+      "separator": true
+    }
+  }
+}

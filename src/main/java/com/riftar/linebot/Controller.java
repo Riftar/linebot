@@ -198,7 +198,8 @@ public class Controller {
                 }
             } break;
             case "!daily": {
-                handleDailyMessage(token);
+//                handleDailyMessage(token);
+                replyFlexMessage(token);
             } break;
             case "!news": {
                 handleNewsMessage(token);
@@ -299,19 +300,20 @@ public class Controller {
     private void replyFlexMessage(String replyToken) {
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("flex_daily_covid.json"));
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
 
+            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
+            flexTemplate = flexTemplate.replace("@positif", "angka positif");
+            flexTemplate = flexTemplate.replace("@sembuh", "angka sembuh");
+            flexTemplate = flexTemplate.replace("@meninggal", "angka meinggal");
 
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
-
-            JSONObject flex = objectMapper.readValue(flexTemplate, JSONObject.class);
-            flex.put("text", "new Title");
-
-            System.out.println("FLEX JSON "+flex);
-
-            //ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
-            //reply(replyMessage);
+//
+//            JSONObject flex = objectMapper.readValue(flexTemplate, JSONObject.class);
+//            System.out.println("FLEX JSON "+flex);
+            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
+            reply(replyMessage);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
