@@ -80,7 +80,7 @@ public class Controller {
     }
 
     @RequestMapping(value="/daily", method= RequestMethod.GET)
-    public ResponseEntity<String> callback() {
+    public ResponseEntity<String> daily() {
         try {
             List<User> users = (List<User>) userRepository.findAll();
             if (!users.isEmpty()){
@@ -102,7 +102,13 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
-
+    @RequestMapping(value="/countries", method= RequestMethod.GET)
+    public ResponseEntity<String> tes() {
+        RestCovid restCovid = new RestCovid();
+        Countries result = restCovid.getCountryName();
+        System.out.println(result.getCountries());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @RequestMapping(value="/webhook", method= RequestMethod.POST)
     public ResponseEntity<String> callback(
             @RequestHeader("X-Line-Signature") String xLineSignature,
