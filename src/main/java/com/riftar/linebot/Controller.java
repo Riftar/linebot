@@ -296,7 +296,7 @@ public class Controller {
     }
 
     private void replyFlexMessage(String replyToken, @Nullable String flexTemplate1) {
-        try {
+//        try {
             RestCovid restCovid = new RestCovid();
             DataDaily dataDaily = restCovid.getDailyIndo();
             String date = NumberUtils.formatDate(dataDaily.getTanggal());
@@ -304,22 +304,22 @@ public class Controller {
             String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
             String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
 
-            ClassLoader classLoader = getClass().getClassLoader();
-            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
-
-            flexTemplate = flexTemplate.replace("@title", "Daily Update");
-            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
-            flexTemplate = flexTemplate.replace("@tanggal", date);
-            flexTemplate = flexTemplate.replace("@positif", confirmed);
-            flexTemplate = flexTemplate.replace("@sembuh", recovered);
-            flexTemplate = flexTemplate.replace("@meninggal", death);
-            ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
-            FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
-            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
-            reply(replyMessage);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//            ClassLoader classLoader = getClass().getClassLoader();
+//            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
+//
+//            flexTemplate = flexTemplate.replace("@title", "Daily Update");
+//            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
+//            flexTemplate = flexTemplate.replace("@tanggal", date);
+//            flexTemplate = flexTemplate.replace("@positif", confirmed);
+//            flexTemplate = flexTemplate.replace("@sembuh", recovered);
+//            flexTemplate = flexTemplate.replace("@meninggal", death);
+//            ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
+//            FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
+//            ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
+//            reply(replyMessage);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private void composeDailyFlexMessage(String replyToken) {
