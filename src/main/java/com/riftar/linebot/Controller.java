@@ -30,6 +30,7 @@ import com.riftar.linebot.model.EventsModel;
 import com.riftar.linebot.model.covid.DataCountry;
 import com.riftar.linebot.model.covid.DataDaily;
 import com.riftar.linebot.model.news.Article;
+import com.sun.istack.Nullable;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -202,7 +203,7 @@ public class Controller {
             } break;
             case "!daily": {
 //                handleDailyMessage(token);
-                composeDailyFlexMessage(token);
+                replyFlexMessage(token, null);
             } break;
             case "!news": {
                 handleNewsMessage(token);
@@ -294,8 +295,24 @@ public class Controller {
         }
     }
 
-    private void replyFlexMessage(String replyToken, String flexTemplate) {
+    private void replyFlexMessage(String replyToken, @Nullable String flexTemplate1) {
         try {
+            RestCovid restCovid = new RestCovid();
+            DataDaily dataDaily = restCovid.getDailyIndo();
+            String date = NumberUtils.formatDate(dataDaily.getTanggal());
+            String confirmed = NumberUtils.formatNumber(dataDaily.getJumlahKasusBaruperHari());
+            String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
+            String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
+
+            ClassLoader classLoader = getClass().getClassLoader();
+            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
+
+            flexTemplate = flexTemplate.replace("@title", "Daily Update");
+            flexTemplate = flexTemplate.replace("@negara", "Indonesia");
+            flexTemplate = flexTemplate.replace("@tanggal", date);
+            flexTemplate = flexTemplate.replace("@positif", confirmed);
+            flexTemplate = flexTemplate.replace("@sembuh", recovered);
+            flexTemplate = flexTemplate.replace("@meninggal", death);
             ObjectMapper objectMapper = ModelObjectMapper.createNewObjectMapper();
             FlexContainer flexContainer = objectMapper.readValue(flexTemplate, FlexContainer.class);
             ReplyMessage replyMessage = new ReplyMessage(replyToken, new FlexMessage("Covid Data", flexContainer));
