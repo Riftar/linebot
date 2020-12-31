@@ -299,10 +299,11 @@ public class Controller {
 //        try {
             RestCovid restCovid = new RestCovid();
             DataDaily dataDaily = restCovid.getDailyIndo();
-            String date = NumberUtils.formatDate(dataDaily.getTanggal());
-            String confirmed = NumberUtils.formatNumber(dataDaily.getJumlahKasusBaruperHari());
-            String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
-            String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
+        System.out.println(dataDaily);
+//            String date = NumberUtils.formatDate(dataDaily.getTanggal());
+//            String confirmed = NumberUtils.formatNumber(dataDaily.getJumlahKasusBaruperHari());
+//            String recovered = NumberUtils.formatNumber(dataDaily.getJumlahKasusSembuhperHari());
+//            String death = NumberUtils.formatNumber(dataDaily.getJumlahKasusMeninggalperHari());
 
 //            ClassLoader classLoader = getClass().getClassLoader();
 //            String flexTemplate = IOUtils.toString(classLoader.getResourceAsStream("simple_daily_covid.json"));
