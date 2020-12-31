@@ -4,6 +4,8 @@ import com.riftar.linebot.model.covid.*;
 import com.riftar.linebot.model.news.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -53,11 +55,18 @@ public class RestCovid {
         try {
             final String uri = "https://indonesia-covid-19.mathdro.id/api/harian";
 
-            restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
                 return execution.execute(request, body);
             })).build();
 
-            DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
+            //DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
+
+            HttpEntity<DailyResponse> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    DailyResponse.class);
+            DailyResponse data = response.getBody();
             DataDaily lastData = data.getData().get(data.getData().size() - 1);
             if (lastData.getJumlahKasusBaruperHari() == null){
                 return data.getData().get(data.getData().size() - 2);
