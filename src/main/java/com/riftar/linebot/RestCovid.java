@@ -53,7 +53,7 @@ public class RestCovid {
         try {
             final String uri = "https://indonesia-covid-19.mathdro.id/api/harian";
 
-            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+            restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
                 return execution.execute(request, body);
             })).build();
 
