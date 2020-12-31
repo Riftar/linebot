@@ -28,8 +28,7 @@ public class RestCovid {
             DataCountry result = restTemplate.getForObject(uri, DataCountry.class);
             return result;
         } catch (Exception e){
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 
@@ -67,6 +66,7 @@ public class RestCovid {
                     null,
                     DailyResponse.class);
             DailyResponse data = response.getBody();
+            System.out.println(data.getData().get(0));
             DataDaily lastData = data.getData().get(data.getData().size() - 1);
             if (lastData.getJumlahKasusBaruperHari() == null){
                 return data.getData().get(data.getData().size() - 2);

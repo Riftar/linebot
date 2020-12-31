@@ -339,7 +339,7 @@ public class Controller {
                   //  System.out.println("query gak ketemu");
                   //  replyText(token, "Keyword anda kurang sesuai. \n Kode Negara " + query + " tidak ditemukan.");
                // } else {
-                    String date = NumberUtils.formatDateCountry(dataCountry.getLastUpdate());
+                   // String date = NumberUtils.formatDateCountry(dataCountry.getLastUpdate());
                     String confirmed = NumberUtils.formatNumber(dataCountry.getConfirmed().getValue());
                     String recovered = NumberUtils.formatNumber(dataCountry.getRecovered().getValue());
                     String death = NumberUtils.formatNumber(dataCountry.getDeaths().getValue());
@@ -348,7 +348,7 @@ public class Controller {
 
                     flexTemplate = flexTemplate.replace("@title", "Total Cases");
 //                    flexTemplate = flexTemplate.replace("@negara", countryName);
-                    flexTemplate = flexTemplate.replace("@tanggal", date);
+                    flexTemplate = flexTemplate.replace("@tanggal", "date");
                     flexTemplate = flexTemplate.replace("@positif", confirmed);
                     flexTemplate = flexTemplate.replace("@sembuh", recovered);
                     flexTemplate = flexTemplate.replace("@meninggal", death);
