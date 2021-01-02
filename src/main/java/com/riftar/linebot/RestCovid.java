@@ -1,14 +1,12 @@
 package com.riftar.linebot;
 
-import com.riftar.linebot.model.covid.Countries;
-import com.riftar.linebot.model.covid.DailyResponse;
-import com.riftar.linebot.model.covid.DataCountry;
-import com.riftar.linebot.model.covid.DataDaily;
+import com.riftar.linebot.model.covid.*;
 import com.riftar.linebot.model.news.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 public class RestCovid {
@@ -56,20 +54,18 @@ public class RestCovid {
         try {
             final String uri = "https://indonesia-covid-19.mathdro.id/api/harian";
 
-//            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
-//                return execution.execute(request, body);
-//            })).build();
+            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+                return execution.execute(request, body);
+            })).build();
 
+            //DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
 
-            RestTemplate restTemplate = new RestTemplate();
-            DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
-
-//            HttpEntity<DailyResponse> response = restTemplate.exchange(
-//                    uri,
-//                    HttpMethod.GET,
-//                    null,
-//                    DailyResponse.class);
-//            DailyResponse data = response.getBody();
+            HttpEntity<DailyResponse> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    DailyResponse.class);
+            DailyResponse data = response.getBody();
             System.out.println(data.getData().get(0));
             DataDaily lastData = data.getData().get(data.getData().size() - 1);
             if (lastData.getJumlahKasusBaruperHari() == null){
@@ -92,15 +88,7 @@ public class RestCovid {
                 return execution.execute(request, body);
             })).build();
 
-//            NewsResponse result = restTemplate.getForObject(uri, NewsResponse.class);
-//            System.out.println(result);
-
-            HttpEntity<NewsResponse> response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    null,
-                    NewsResponse.class);
-            NewsResponse result = response.getBody();
+            NewsResponse result = restTemplate.getForObject(uri, NewsResponse.class);
             System.out.println(result);
             return result;
         } catch (Exception e){
