@@ -1,12 +1,14 @@
 package com.riftar.linebot;
 
-import com.riftar.linebot.model.covid.*;
+import com.riftar.linebot.model.covid.Countries;
+import com.riftar.linebot.model.covid.DailyResponse;
+import com.riftar.linebot.model.covid.DataCountry;
+import com.riftar.linebot.model.covid.DataDaily;
 import com.riftar.linebot.model.news.NewsResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 public class RestCovid {
