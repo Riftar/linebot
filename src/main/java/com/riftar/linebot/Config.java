@@ -45,16 +45,4 @@ public class Config
     {
         return new LineSignatureValidator(getChannelSecret().getBytes());
     }
-
-    @Bean(name="restCovid")
-    public RestCovid getRestCovid()
-    {
-        return new RestCovid();
-    }
-
-    @Bean(name="restTemplate")
-    public RestTemplate getRestTemplate()
-    {
-        return new RestTemplate();
-    }
 }

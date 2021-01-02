@@ -88,7 +88,15 @@ public class RestCovid {
                 return execution.execute(request, body);
             })).build();
 
-            NewsResponse result = restTemplate.getForObject(uri, NewsResponse.class);
+//            NewsResponse result = restTemplate.getForObject(uri, NewsResponse.class);
+//            System.out.println(result);
+
+            HttpEntity<NewsResponse> response = restTemplate.exchange(
+                    uri,
+                    HttpMethod.GET,
+                    null,
+                    NewsResponse.class);
+            NewsResponse result = response.getBody();
             System.out.println(result);
             return result;
         } catch (Exception e){
