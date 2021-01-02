@@ -44,4 +44,10 @@ public class Config
     {
         return new LineSignatureValidator(getChannelSecret().getBytes());
     }
+
+    @Bean(name="restCovid")
+    public RestCovid getRestCovid()
+    {
+        return new RestCovid();
+    }
 }

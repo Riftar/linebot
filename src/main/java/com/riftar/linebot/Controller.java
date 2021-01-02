@@ -59,6 +59,7 @@ public class Controller {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    @Qualifier("restCovid")
     private RestCovid restCovid;
 
 //    @Scheduled(cron = "0 * 17 * * *")
