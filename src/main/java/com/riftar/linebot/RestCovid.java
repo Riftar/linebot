@@ -56,18 +56,20 @@ public class RestCovid {
         try {
             final String uri = "https://indonesia-covid-19.mathdro.id/api/harian";
 
-            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
-                return execution.execute(request, body);
-            })).build();
+//            RestTemplate restTemplate = new RestTemplateBuilder(rt-> rt.getInterceptors().add((request, body, execution) -> {
+//                return execution.execute(request, body);
+//            })).build();
 
-            //DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
 
-            HttpEntity<DailyResponse> response = restTemplate.exchange(
-                    uri,
-                    HttpMethod.GET,
-                    null,
-                    DailyResponse.class);
-            DailyResponse data = response.getBody();
+            RestTemplate restTemplate = new RestTemplate();
+            DailyResponse data = restTemplate.getForObject(uri, DailyResponse.class);
+
+//            HttpEntity<DailyResponse> response = restTemplate.exchange(
+//                    uri,
+//                    HttpMethod.GET,
+//                    null,
+//                    DailyResponse.class);
+//            DailyResponse data = response.getBody();
             System.out.println(data.getData().get(0));
             DataDaily lastData = data.getData().get(data.getData().size() - 1);
             if (lastData.getJumlahKasusBaruperHari() == null){
