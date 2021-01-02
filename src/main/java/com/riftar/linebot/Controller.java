@@ -58,26 +58,28 @@ public class Controller {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RestCovid restCovid;
 
-    @Scheduled(cron = "0 * 17 * * *")
-    public void dailyUpdateCovid(){
-        try {
-            List<User> users = (List<User>) userRepository.findAll();
-            if (!users.isEmpty()){
-                String date = NumberUtils.getDate();
-                System.out.println("update daily data "+date);
-                String messageToUser = composeDailyData();
-                TextMessage textMessage = new TextMessage(messageToUser);
-                PushMessage pushMessage = new PushMessage(Constant.userId, textMessage);
-                push(pushMessage);
-            } else {
-                System.out.println("User ID is empty");
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            System.out.println("Error execute daily data");
-        }
-    }
+//    @Scheduled(cron = "0 * 17 * * *")
+//    public void dailyUpdateCovid(){
+//        try {
+//            List<User> users = (List<User>) userRepository.findAll();
+//            if (!users.isEmpty()){
+//                String date = NumberUtils.getDate();
+//                System.out.println("update daily data "+date);
+//                String messageToUser = composeDailyData();
+//                TextMessage textMessage = new TextMessage(messageToUser);
+//                PushMessage pushMessage = new PushMessage(Constant.userId, textMessage);
+//                push(pushMessage);
+//            } else {
+//                System.out.println("User ID is empty");
+//            }
+//        } catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("Error execute daily data");
+//        }
+//    }
 
     @RequestMapping(value="/daily", method= RequestMethod.GET)
     public ResponseEntity<String> daily() {
